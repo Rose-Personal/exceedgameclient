@@ -2115,8 +2115,8 @@ func _on_strike_character_effect(event):
 	bonus_panel.visible = true
 	var effect = event['extra_info']
 	var label_text = ""
-	label_text += CardDefinitions.get_effect_text(effect, false, true, true) + "\n"
-	label_text = label_text.replace(",", "\n")
+	label_text = CardDefinitions.get_effect_text(effect, false, true, true)
+	label_text = CardDefinitions.format_effects_text_output(label_text.replace(",", "\n"))
 	bonus_label.text = label_text
 
 func _on_effect_choice(event):
@@ -2654,7 +2654,7 @@ func _update_buttons():
 			var card_name = ""
 			if 'card_name' in choice:
 				card_name = choice['card_name']
-			card_text = CardDefinitions.get_effect_text(choice, false, true, false, card_name)
+			card_text = CardDefinitions.format_effects_text_output(CardDefinitions.get_effect_text(choice, false, true, false, card_name)).rstrip('.')
 			if len(card_text) > ChoiceTextLengthSoftCap:
 				var break_idx = ChoiceTextLengthSoftCap-1
 				while break_idx < len(card_text)-1 and card_text[break_idx] != " ":
@@ -2701,8 +2701,7 @@ func update_boost_summary(boosts_card_holder, boost_box):
 				if effect['timing'] != "discarded":
 					effects.append(effect)
 	var boost_summary = ""
-	for effect in effects:
-		boost_summary += CardDefinitions.get_effect_text(effect) + "\n"
+	boost_summary = CardDefinitions.get_effects_text(effects)
 	boost_box.set_text(boost_summary)
 
 func update_arena_squares():

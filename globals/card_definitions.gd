@@ -119,9 +119,9 @@ func get_force_for_effect_summary(effect, card_name_source : String) -> String:
 	var effect_str = ""
 	var force_limit = effect['force_max']
 	if "per_force_effect" in effect and effect['per_force_effect'] != null:
-		effect_str += "Spend up to %s force. For each, %s" % [str(force_limit), get_effect_text(effect['per_force_effect'], false, true, true, card_name_source)]
+		effect_str = "spend up to %s force. For each, %s" % [str(force_limit), get_effect_text(effect['per_force_effect'], false, true, true, card_name_source)]
 	elif 'overall_effect' in effect and effect['overall_effect'] != null:
-		effect_str += "You may spend %s force to %s" % [str(force_limit), get_effect_text(effect['overall_effect'], false, true, true, card_name_source)]
+		effect_str = "you may spend %s force to %s" % [str(force_limit), get_effect_text(effect['overall_effect'], false, true, true, card_name_source)]
 	return effect_str
 
 func get_gauge_for_effect_summary(effect, card_name_source : String) -> String:
@@ -130,59 +130,59 @@ func get_gauge_for_effect_summary(effect, card_name_source : String) -> String:
 	var gauge_limit = effect['gauge_max']
 	if "per_gauge_effect" in effect and effect['per_gauge_effect'] != null:
 		if to_hand:
-			effect_str += "Return up to %s gauge to your hand. For each, %s" % [str(gauge_limit), get_effect_text(effect['per_gauge_effect'], false, true, true, card_name_source)]
+			effect_str = "return up to %s gauge to your hand. For each, %s" % [str(gauge_limit), get_effect_text(effect['per_gauge_effect'], false, true, true, card_name_source)]
 		else:
-			effect_str += "Spend up to %s gauge. For each, %s" % [str(gauge_limit), get_effect_text(effect['per_gauge_effect'], false, true, true, card_name_source)]
+			effect_str = "spend up to %s gauge. For each, %s" % [str(gauge_limit), get_effect_text(effect['per_gauge_effect'], false, true, true, card_name_source)]
 	elif 'overall_effect' in effect and effect['overall_effect'] != null:
 		if to_hand:
-			effect_str += "You may return %s gauge to your hand to %s" % [str(gauge_limit), get_effect_text(effect['overall_effect'], false, true, true, card_name_source)]
+			effect_str = "you may return %s gauge to your hand to %s" % [str(gauge_limit), get_effect_text(effect['overall_effect'], false, true, true, card_name_source)]
 		else:
-			effect_str += "You may spend %s gauge to %s" % [str(gauge_limit), get_effect_text(effect['overall_effect'], false, true, true, card_name_source)]
+			effect_str = "you may spend %s gauge to %s" % [str(gauge_limit), get_effect_text(effect['overall_effect'], false, true, true, card_name_source)]
 	return effect_str
 
 func get_timing_text(timing):
 	var text = ""
 	match timing:
 		"action":
-			text += "[b]Action:[/b] "
+			text = "[b]Action:[/b] "
 		"after":
-			text += "[b]After:[/b] "
+			text = "[b]After:[/b] "
 		"both_players_after":
-			text += "[b]Both players after:[/b] "
+			text = "[b]Both players after:[/b] "
 		"both_players_before":
-			text += "[b]Both players before:[/b] "
+			text = "[b]Both players before:[/b] "
 		"before":
-			text += "[b]Before:[/b] "
+			text = "[b]Before:[/b] "
 		"cleanup":
-			text += "[b]Cleanup:[/b] "
+			text = "[b]Cleanup:[/b] "
 		"discarded":
-			text += ""
+			text = ""
 		"during_strike":
-			text += ""
+			text = ""
 		"end_of_turn":
-			text += "At end of your turn: "
+			text = "at end of your turn: "
 		"hit":
-			text += "[b]Hit:[/b] "
+			text = "[b]Hit:[/b] "
 		"immediate":
-			text += ""
+			text = ""
 		"now":
-			text += "[b]Now:[/b] "
+			text = "[b]Now:[/b] "
 		"on_advance_or_close":
-			text += "When you advance or close, "
+			text = "when you Advance or Close, "
 		"on_cancel":
-			text += "When you cancel, "
+			text = "when you cancel, "
 		"on_initiate_strike":
-			text += "When you initiate a strike, "
+			text = "when you initiate a strike, "
 		"on_reveal":
-			text += ""
+			text = ""
 		"start_of_next_turn":
-			text += "At start of next turn: "
+			text = "at start of next turn: "
 		"set_strike":
-			text += "When you set a strike, "
+			text = "when you set a strike, "
 		"when_hit":
-			text += "When hit, "
+			text = "when hit, "
 		_:
-			text += "MISSING TIMING"
+			text = "MISSING TIMING"
 	return text
 
 func get_condition_text(effect, amount, amount2, detail):
@@ -190,114 +190,114 @@ func get_condition_text(effect, amount, amount2, detail):
 	var text = ""
 	match condition:
 		"advanced_through":
-			text += "If advanced past opponent, "
+			text = "if advanced past opponent, "
 		"not_advanced_through_buddy":
-			text += "If didn't advance through %s, " % detail
+			text = "if didn't advance through %s, " % detail
 		"at_edge_of_arena":
-			text += "If at arena edge, "
+			text = "if at arena edge, "
 		"boost_in_play":
-			text += "If a boost is in play, "
+			text = "if a boost is in play, "
 		"canceled_this_turn":
-			text += "If canceled this turn, "
+			text = "if canceled this turn, "
 		"discarded_matches_attack_speed":
-			text += "If discarded card matches attack speed, "
+			text = "if discarded card matches attack speed, "
 		"initiated_strike":
-			text += "If initiated strike, "
+			text = "if initiated strike, "
 		"hit_opponent":
-			text += "If hit opponent, "
+			text = "if hit opponent, "
 		"last_turn_was_strike":
-			text += "If last turn was a strike, "
+			text = "if last turn was a strike, "
 		"not_last_turn_was_strike":
-			text += "If last turn was not a strike, "
+			text = "if last turn was not a strike, "
 		"life_equals":
-			text += "If your life is exactly %s, " % amount
+			text = "if your life is exactly %s, " % amount
 		"not_canceled_this_turn":
-			text += "If not canceled this turn, "
+			text = "if not canceled this turn, "
 		"not_full_push":
-			text += "If not full push, "
+			text = "if not full push, "
 		"pushed_min_spaces":
-			text += "If pushed %s or more spaces, " % amount
+			text = "if pushed %s or more spaces, " % amount
 		"not_full_close":
-			text += "If not full close, "
+			text = "if not full close, "
 		"not_initiated_strike":
-			text += "If opponent initiated strike, "
+			text = "if opponent initiated strike, "
 		"not_moved_self_this_strike":
-			text += "If you have not moved yourself this strike, "
+			text = "if you have not moved yourself this strike, "
 		"moved_during_strike":
-			text += "If you moved at least %s space(s) this strike, " % amount
+			text = "if you moved at least %s space(s) this strike, " % amount
 		"min_cards_in_discard":
-			text += "If you have at least %s card(s) in discard, " % amount
+			text = "if you have at least %s card(s) in discard, " % amount
 		"min_cards_in_hand":
-			text += "If you have at least %s card(s) in hand, " % amount
+			text = "if you have at least %s card(s) in hand, " % amount
 		"min_cards_in_gauge":
-			text += "If you have at least %s card(s) in gauge, " % amount
+			text = "if you have at least %s card(s) in gauge, " % amount
 		"no_strike_caused":
-			text += "If no strike caused, "
+			text = "if no strike caused, "
 		"stunned":
-			text += "If stunned, "
+			text = "if stunned, "
 		"not_stunned":
-			text += "If not stunned, "
+			text = "if not stunned, "
 		"opponent_stunned":
-			text += "If opponent stunned, "
+			text = "if opponent stunned, "
 		"pulled_past":
-			text += "If pulled opponent past you, "
+			text = "if pulled opponent past you, "
 		"used_character_action":
-			text += ""
+			text = ""
 		"used_character_bonus":
-			text += ""
+			text = ""
 		"range":
-			text += "If the opponent is at range %s, " % amount
+			text = "if the opponent is at range %s, " % amount
 		"range_greater_or_equal":
-			text += "If the opponent is at range %s+, " % amount
+			text = "if the opponent is at range %s+, " % amount
 		"range_multiple":
-			text += "If the opponent is at range %s-%s, " % [amount, amount2]
+			text = "if the opponent is at range %s-%s, " % [amount, amount2]
 		"is_special_attack":
-			text += ""
+			text = ""
 		"is_special_or_ultra_attack":
-			text += ""
+			text = ""
 		"is_normal_attack":
-			text += ""
+			text = ""
 		"top_deck_is_normal_attack":
-			text += "If the top card of your deck is a normal, "
+			text = "if the top card of your deck is a normal, "
 		"is_buddy_special_or_ultra_attack":
-			text += ""
+			text = ""
 		"buddy_in_opponent_space":
-			text += "If %s is in opponent's space, " % detail
+			text = "if %s is in opponent's space, " % detail
 		"buddy_in_play":
-			text += "If %s is in play, " % detail
+			text = "if %s is in play, " % detail
 		"buddy_space_unoccupied":
-			text += "If %s's space is unoccupied, " % detail
+			text = "if %s's space is unoccupied, " % detail
 		"on_buddy_space":
-			text += "If on %s's space, " % detail
+			text = "if on %s's space, " % detail
 		"buddy_between_attack_source":
-			text += "If %s is between you and attack source, " % detail
+			text = "if %s is between you and attack source, " % detail
 		"buddy_between_opponent":
-			text += "If %s is between you and opponent, " % detail
+			text = "if %s is between you and opponent, " % detail
 		"more_cards_than_opponent":
-			text += "If you have more cards in hand than opponent, "
+			text = "if you have more cards in hand than opponent, "
 		"opponent_at_edge_of_arena":
-			text += "If opponent at arena edge, "
+			text = "if opponent at arena edge, "
 		"opponent_between_buddy":
 			if 'include_buddy_space' in effect and effect['include_buddy_space']:
-				text += "If opponent is on %s or between you, " % detail
+				text = "if opponent is on %s or between you, " % detail
 			else:
-				text += "If opponent is between you and %s, " % detail
+				text = "if opponent is between you and %s, " % detail
 		"is_buddy_special_attack":
-			text += ""
+			text = ""
 		"was_wild_swing":
-			text += "If this was a wild swing, "
+			text = "if this was a wild swing, "
 		"was_strike_from_gauge":
-			text += "If set from gauge, "
+			text = "if set from gauge, "
 		"was_hit":
-			text += "If you were hit, "
+			text = "if you were hit, "
 		"matches_named_card":
-			text += "If your next attack is %s, " % detail
+			text = "if your next attack is %s, " % detail
 		"is_critical":
-			text += "Crit: "
+			text = "crit: "
 		"no_sealed_copy_of_attack":
-			text += "If there is no sealed copy of your attack, "
+			text = "if there is no sealed copy of your attack, "
 		_:
-			text += "MISSING CONDITION"
+			text = "MISSING CONDITION"
 	return text
 
 func get_effect_type_heading(effect):
@@ -305,23 +305,23 @@ func get_effect_type_heading(effect):
 	var effect_type = effect['effect_type']
 	match effect_type:
 		"advance":
-			effect_str += "Advance "
+			effect_str = "Advance "
 		"close":
-			effect_str += "Close "
+			effect_str = "Close "
 		"draw":
-			effect_str += "Draw "
+			effect_str = "draw "
 		"pass":
-			effect_str += ""
+			effect_str = ""
 		"pull":
-			effect_str += "Pull "
+			effect_str = "Pull "
 		"pull_not_past":
-			effect_str += "Pull without pulling past "
+			effect_str = "Pull without pulling past "
 		"push":
-			effect_str += "Push "
+			effect_str = "Push "
 		"retreat":
-			effect_str += "Retreat "
+			effect_str = "Retreat "
 		_:
-			effect_str += "MISSING EFFECT HEADING"
+			effect_str = "MISSING EFFECT HEADING"
 	return effect_str
 
 func get_effect_type_text(effect, card_name_source : String = ""):
@@ -330,206 +330,206 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 	match effect_type:
 		"add_boost_to_gauge_on_strike_cleanup":
 			if card_name_source:
-				effect_str += "Add %s to gauge" % card_name_source
+				effect_str = "add %s to gauge" % card_name_source
 			else:
-				effect_str += "Add card to gauge"
+				effect_str = "add card to gauge"
 		"add_boost_to_overdrive_during_strike_immediately":
 			if 'card_name' in effect:
-				effect_str += "Add %s to overdrive" % effect['card_name']
+				effect_str = "add %s to overdrive" % effect['card_name']
 			else:
-				effect_str += "Add card to overdrive"
+				effect_str = "add card to overdrive"
 		"add_hand_to_gauge":
-			effect_str += "Add your hand to your gauge"
+			effect_str = "add your hand to your gauge"
 		"add_strike_to_gauge_after_cleanup":
-			effect_str += "Add card to gauge after strike."
+			effect_str = "add card to gauge after strike"
 		"add_strike_to_overdrive_after_cleanup":
-			effect_str += "Add card to overdrive after strike."
+			effect_str = "add card to overdrive after strike"
 		"add_to_gauge_boost_play_cleanup":
-			effect_str += "Add card to gauge"
+			effect_str = "add card to gauge"
 		"add_to_gauge_immediately":
-			effect_str += "Add card to gauge"
+			effect_str = "add card to gauge"
 		"add_to_gauge_immediately_mid_strike_undo_effects":
-			effect_str += "Add card to gauge (and cancel its effects)."
+			effect_str = "add card to gauge (and cancel its effects)"
 		"add_top_deck_to_gauge":
-			effect_str += "Add top card of deck to gauge"
+			effect_str = "add top card of deck to gauge"
 		"add_top_discard_to_gauge":
-			effect_str += "Add top card of discard pile to gauge"
+			effect_str = "add top card of discard pile to gauge"
 		"add_top_discard_to_overdrive":
 			if 'card_name' in effect:
-				effect_str += "Add %s from top of discard pile to overdrive" % effect['card_name']
+				effect_str = "add %s from top of discard pile to overdrive" % effect['card_name']
 			else:
-				effect_str += "Add top card of discard pile to overdrive"
+				effect_str = "add top card of discard pile to overdrive"
 		"advance":
-			effect_str += "Advance "
+			effect_str = "Advance "
 			if str(effect['amount']) == "strike_x":
 				effect_str += "X"
 			else:
 				effect_str += str(effect['amount'])
 		"advance_INTERNAL":
-			effect_str += "Advance "
+			effect_str = "Advance "
 			if str(effect['amount']) == "strike_x":
 				effect_str += "X"
 			else:
 				effect_str += str(effect['amount'])
 		"armorup":
-			effect_str += "+" + str(effect['amount']) + " Armor"
+			effect_str = "+" + str(effect['amount']) + " Armor"
 		"armorup_damage_dealt":
-			effect_str += "+ Armor per damage dealt"
+			effect_str = "+ armor per damage dealt"
 		"attack_does_not_hit":
-			effect_str += "Attack does not hit."
+			effect_str = "attack does not hit"
 		"attack_is_ex":
-			effect_str += "Next Strike is EX"
+			effect_str = "next strike is EX"
 		"block_opponent_move":
-			effect_str += "Opponent cannot move"
+			effect_str = "opponent cannot move"
 		"remove_block_opponent_move":
-			effect_str += ""
+			effect_str = ""
 		"bonus_action":
-			effect_str += "Take another action"
+			effect_str = "Take another action"
 		'boost_then_strike':
 			var wild_str = ""
 			if 'wild_strike' in effect and effect['wild_strike']:
 				wild_str = "Wild "
-			effect_str += "Boost, then %sStrike if you weren't caused to Strike" % wild_str
+			effect_str = "Boost, then %sStrike if you weren't caused to Strike" % wild_str
 		"boost_this_then_sustain":
 			if card_name_source:
-				effect_str += "Boost and sustain %s" % card_name_source
+				effect_str = "boost and sustain %s" % card_name_source
 			else:
-				effect_str += "Boost and sustain this"
+				effect_str = "boost and sustain this"
 		"boost_then_sustain":
 			var limitation_str = "boost"
 			if effect['limitation']:
 				limitation_str = effect['limitation'] + " boost"
 			if effect['allow_gauge']:
-				effect_str += "Play and sustain a %s from hand or gauge." % limitation_str
+				effect_str = "play and sustain a %s from hand or gauge" % limitation_str
 			else:
-				effect_str += "Play and sustain a %s from hand." % limitation_str
+				effect_str = "play and sustain a %s from hand" % limitation_str
 		"boost_then_sustain_topdeck":
-			effect_str += "Play and sustain %s card(s) from the top of your deck." % effect['amount']
+			effect_str = "play and sustain %s card(s) from the top of your deck" % effect['amount']
 		"boost_then_sustain_topdiscard":
 			var limitation_str = "card(s)"
 			if 'limitation' in effect and effect['limitation'] == "continuous":
 				limitation_str = "continuous boost(s)"
-			effect_str += "Play and sustain the top %s %s from your discard pile" % [effect['amount'], limitation_str]
+			effect_str = "play and sustain the top %s %s from your discard pile" % [effect['amount'], limitation_str]
 		"cannot_stun":
-			effect_str += "Attack does not stun."
+			effect_str = "attack does not stun"
 		"choice":
 			if 'opponent' in effect and effect['opponent']:
-				effect_str += "Opponent "
+				effect_str = "opponent "
 			if 'special_choice_name' in effect:
 				effect_str += effect['special_choice_name']
 			else:
-				effect_str += "Choose: " + get_choice_summary(effect['choice'], card_name_source)
+				effect_str += "choose: " + get_choice_summary(effect['choice'], card_name_source)
 		"choose_discard":
 			var source = "discard"
 			if 'source' in effect:
 				source = effect['source']
 			if effect['limitation']:
-				effect_str += "Choose a %s card from %s to move to %s" % [effect['limitation'], source, effect['destination']]
+				effect_str = "choose a %s card from %s to move to %s" % [effect['limitation'], source, effect['destination']]
 			else:
-				effect_str += "Choose a card from %s to move to %s" % [source, effect['destination']]
+				effect_str = "choose a card from %s to move to %s" % [source, effect['destination']]
 		"choose_sustain_boost":
-			effect_str += "Choose a boost to sustain."
+			effect_str = "choose a boost to sustain"
 		"close":
-			effect_str += "Close " + str(effect['amount'])
+			effect_str = "Close " + str(effect['amount'])
 		"close_INTERNAL":
-			effect_str += "Close " + str(effect['amount'])
+			effect_str = "Close " + str(effect['amount'])
 		"copy_other_hit_effect":
-			effect_str += "Copy another Hit effect"
+			effect_str = "copy another Hit effect"
 		"critical":
-			effect_str += "Critical Strike"
+			effect_str = "Critical Strike"
 		"discard_this":
-			effect_str += "Discard this"
+			effect_str = "discard this"
 		"discard_strike_after_cleanup":
-			effect_str += "Discard attack on cleanup"
+			effect_str = "discard attack on cleanup"
 		"discard_continuous_boost":
 			if 'limitation' in effect and effect['limitation'] == 'mine' and 'overall_effect' in effect:
-				effect_str += "You may discard one of your continuous boosts for %s" % [get_effect_text(effect['overall_effect'])]
+				effect_str = "you may discard one of your continuous boosts for %s" % [get_effect_text(effect['overall_effect'])]
 			else:
-				effect_str += "Discard a continuous boost"
+				effect_str = "discard a continuous boost"
 		"discard_opponent_gauge":
-			effect_str += "Discard a card from opponent's gauge."
+			effect_str = "discard a card from opponent's gauge"
 		"discard_opponent_topdeck":
-			effect_str += "Discard a card from the top of the opponent's deck"
+			effect_str = "discard a card from the top of the opponent's deck"
 		"discard_topdeck":
 			if 'card_name' in effect:
-				effect_str += "Discard %s from the top of your deck" % effect['card_name']
+				effect_str = "discard %s from the top of your deck" % effect['card_name']
 			else:
-				effect_str += "Discard a card from the top of your deck"
+				effect_str = "discard a card from the top of your deck"
 		"discard_random_and_add_triggers":
-			effect_str += "Discard a random card; add before/hit/after triggers to attack"
+			effect_str = "discard a random card; add before/hit/after triggers to attack"
 		"dodge_at_range":
 			var buddy_string = ""
 			if 'from_buddy' in effect and effect['from_buddy']:
 				buddy_string = " from %s" % effect['buddy_name']
 			if 'special_range' in effect and effect['special_range'] == "OVERDRIVE_COUNT":
-				effect_str += "Opponent attacks miss at range X where X is # of cards in your overdrive."
+				effect_str = "opponent attacks miss at range X where X is # of cards in your overdrive"
 			elif effect['range_min'] == effect['range_max']:
-				effect_str += "Opponent attacks miss at range %s%s." % [effect['range_min'], buddy_string]
+				effect_str = "opponent attacks miss at range %s%s" % [effect['range_min'], buddy_string]
 			else:
-				effect_str += "Opponent attacks miss at range %s-%s%s." % [effect['range_min'], effect['range_max'], buddy_string]
+				effect_str = "opponent attacks miss at range %s-%s%s" % [effect['range_min'], effect['range_max'], buddy_string]
 		"dodge_attacks":
-			effect_str += "Opponent misses."
+			effect_str = "opponent misses"
 		"dodge_from_opposite_buddy":
-			effect_str += "Opponents on other side of %s miss." % effect['buddy_name']
+			effect_str = "opponents on other side of %s miss" % effect['buddy_name']
 		"do_not_remove_buddy":
-			effect_str += "Do not remove %s from play." % effect['buddy_name']
+			effect_str = "do not remove %s from play" % effect['buddy_name']
 		"remove_buddy":
-			effect_str += "Remove %s from play" % effect['buddy_name']
+			effect_str = "remove %s from play" % effect['buddy_name']
 		"place_buddy_in_any_space":
-			effect_str += "Place %s in any space." % effect['buddy_name']
+			effect_str = "place %s in any space" % effect['buddy_name']
 		"place_buddy_in_attack_range":
-			effect_str += "Place %s in the attack's range." % effect['buddy_name']
+			effect_str = "place %s in the attack's range" % effect['buddy_name']
 		"calculate_range_from_buddy":
-			effect_str += "Calculate range from %s." % effect['buddy_name']
+			effect_str = "Calculate range from %s." % effect['buddy_name']
 		"calculate_range_from_center":
-			effect_str += "Calculate range from the center of the arena."
+			effect_str = "Calculate range from the center of the arena."
 		"draw":
 			if 'opponent' in effect and effect['opponent']:
-				effect_str += "Opponent Draw " + str(effect['amount'])
+				effect_str = "opponent draws " + str(effect['amount'])
 			else:
-				effect_str += "Draw " + str(effect['amount'])
+				effect_str = "draw " + str(effect['amount'])
 		"draw_to":
-			effect_str += "Draw until you have %s cards in hand" % str(effect['amount'])
+			effect_str = "draw until you have %s cards in hand" % str(effect['amount'])
 		"exceed_now":
-			effect_str += "Exceed"
+			effect_str = "exceed"
 		"extra_trigger_resolutions":
-			effect_str += "Before/Hit/After triggers resolve %s extra time(s)" % effect['amount']
+			effect_str = "Before/Hit/After triggers resolve %s extra time(s)" % effect['amount']
 		"flip_buddy_miss_get_gauge":
-			effect_str += effect['description']
+			effect_str = effect['description']
 		"force_costs_reduced_passive":
-			effect_str += "Force costs reduced by %s" % effect['amount']
+			effect_str = "force costs reduced by %s" % effect['amount']
 		"force_for_effect":
-			effect_str += get_force_for_effect_summary(effect, card_name_source)
+			effect_str = get_force_for_effect_summary(effect, card_name_source)
 		"gauge_for_effect":
-			effect_str += get_gauge_for_effect_summary(effect, card_name_source)
+			effect_str = get_gauge_for_effect_summary(effect, card_name_source)
 		"gain_advantage":
-			effect_str += "Gain Advantage"
+			effect_str = "gain Advantage"
 		"gain_life":
-			effect_str += "Gain " + str(effect['amount']) + " life"
+			effect_str = "gain " + str(effect['amount']) + " life"
 		"gauge_from_hand":
-			effect_str += "Add a card from hand to gauge"
+			effect_str = "add a card from hand to gauge"
 		"guardup":
 			if effect['amount'] > 0:
-				effect_str += "+"
+				effect_str = "+"
 			effect_str += str(effect['amount']) + " Guard"
 		"ignore_armor":
-			effect_str += "Ignore armor"
+			effect_str = "Ignore Armor"
 		"ignore_guard":
-			effect_str += "Ignore guard"
+			effect_str = "Ignore Guard"
 		"ignore_push_and_pull":
-			effect_str += "Ignore Push and Pull"
+			effect_str = "Ignore Push and Pull"
 		"ignore_push_and_pull_passive_bonus":
-			effect_str += "Ignore Push and Pull"
+			effect_str = "Ignore Push and Pull"
 		"increase_force_spent_before_strike":
-			effect_str += get_effect_text(effect['linked_effect'], false, false, false)
+			effect_str = get_effect_text(effect['linked_effect'], false, false, false)
 		"remove_ignore_push_and_pull_passive_bonus":
-			effect_str += ""
+			effect_str = ""
 		"lose_all_armor":
-			effect_str += "Lose all armor"
+			effect_str = "lose all armor"
 		"name_card_opponent_discards":
-			effect_str += "Name a card. Opponent discards it or reveals not in hand."
+			effect_str = "name a card. opponent discards it or reveals not in hand"
 		"may_advance_bonus_spaces":
-			effect_str = "You may Advance/Close %s extra space(s)" % effect['amount']
+			effect_str = "you may Advance/Close %s extra space(s)" % effect['amount']
 		"move_buddy":
 			var strike_str = ""
 			if 'strike_after' in effect and effect['strike_after']:
@@ -537,82 +537,82 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 			var movement_str = "%s" % effect['amount']
 			if effect['amount'] != effect['amount2']:
 				movement_str += "-%s" % effect['amount2']
-			effect_str += "Move %s %s space(s)%s" % [effect['buddy_name'], movement_str, strike_str]
+			effect_str = "move %s %s space(s)%s" % [effect['buddy_name'], movement_str, strike_str]
 		"move_to_buddy":
-			effect_str += "Move to %s" % effect['buddy_name']
+			effect_str = "move to %s" % effect['buddy_name']
 		"multiply_power_bonuses":
 			if effect['amount'] == 2:
-				effect_str += "Double power bonuses"
+				effect_str = "double power bonuses"
 			else:
-				effect_str += "Multiply power bonuses by %s" % effect['amount']
+				effect_str = "multiply power bonuses by %s" % effect['amount']
 		"nothing":
-			effect_str += ""
+			effect_str = ""
 		"opponent_cant_move_past":
-			effect_str += "Opponent cannot Advance past you"
+			effect_str = "opponent cannot advance past you"
 		"remove_opponent_cant_move_past":
-			effect_str += ""
+			effect_str = ""
 		"opponent_discard_choose":
-			effect_str += "Opponent discards " + str(effect['amount']) + " cards."
+			effect_str = "opponent discards " + str(effect['amount']) + " cards"
 		"opponent_discard_random":
 			var dest_str = ""
 			if 'destination' in effect:
 				dest_str = " to your " + effect['destination']
-			effect_str += "Opponent discards " + str(effect['amount']) + " random cards" + dest_str + "."
+			effect_str = "opponent discards " + str(effect['amount']) + " random cards" + dest_str
 		"opponent_wild_swings":
-			effect_str += "Opponent wild swings."
+			effect_str = "opponent wild swings"
 		"pass":
-			effect_str += "Pass"
+			effect_str = "Pass"
 		"place_buddy_at_range":
 			if effect['range_min'] == effect['range_max']:
-				effect_str += "Place %s at range %s" % [effect['buddy_name'], effect['range_min']]
+				effect_str = "place %s at range %s" % [effect['buddy_name'], effect['range_min']]
 			else:
-				effect_str += "Place %s at range %s-%s" % [effect['buddy_name'], effect['range_min'], effect['range_max']]
+				effect_str = "place %s at range %s-%s" % [effect['buddy_name'], effect['range_min'], effect['range_max']]
 		"place_buddy_onto_self":
-			effect_str += "Place %s onto your space" % effect['buddy_name']
+			effect_str = "place %s onto your space" % effect['buddy_name']
 		"powerup":
 			if str(effect['amount']) == "strike_x":
-				effect_str += "+X"
+				effect_str = "+X"
 			else:
 				if effect['amount'] > 0:
-					effect_str += "+"
+					effect_str = "+"
 				effect_str += str(effect['amount'])
 			effect_str += " Power"
 		"powerup_both_players":
-			effect_str += "Both players "
+			effect_str = "both players "
 			if effect['amount'] > 0:
 				effect_str += "+"
 			effect_str += str(effect['amount'])
 			effect_str += " Power"
 		"powerup_per_boost_in_play":
-			effect_str += "+" + str(effect['amount']) + " Power per boost in play."
+			effect_str = "+" + str(effect['amount']) + " Power per boost in play"
 		"powerup_per_sealed_normal":
 			var max_text = ""
 			if 'maximum' in effect:
 				max_text = " (max %s)" % effect['maximum']
-			effect_str += "+" + str(effect['amount']) + " Power per sealed normal%s." % max_text
+			effect_str = "+" + str(effect['amount']) + " Power per sealed normal%s" % max_text
 		"powerup_damagetaken":
-			effect_str += "+" + str(effect['amount']) + " Power per damage taken this strike."
+			effect_str = "+" + str(effect['amount']) + " Power per damage taken this strike"
 		"powerup_opponent":
-			effect_str += "+" + str(effect['amount']) + " Opponent's Power"
+			effect_str = "+" + str(effect['amount']) + " opponent's Power"
 		"pull":
-			effect_str += "Pull " + str(effect['amount'])
+			effect_str = "Pull " + str(effect['amount'])
 		"push":
-			effect_str += "Push " + str(effect['amount'])
+			effect_str = "Push " + str(effect['amount'])
 		"push_from_source":
-			effect_str += "Push " + str(effect['amount']) + " from attack source"
+			effect_str = "Push " + str(effect['amount']) + " from attack source"
 		"push_to_attack_max_range":
-			effect_str += "Push to attack's max range"
+			effect_str = "Push to attack's max range"
 		"rangeup":
 			if effect['amount'] != effect['amount2']:
 				# Skip the first one if they're the same.
 				if effect['amount'] >= 0:
-					effect_str += "+"
+					effect_str = "+"
 				effect_str += str(effect['amount']) + " - "
 			if effect['amount2'] >= 0:
 				effect_str += "+"
 			effect_str += str(effect['amount2']) + " Range"
 		"rangeup_both_players":
-			effect_str += "Both players "
+			effect_str = "both players "
 			if effect['amount'] != effect['amount2']:
 				# Skip the first one if they're the same.
 				if effect['amount'] >= 0:
@@ -623,67 +623,67 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 			effect_str += str(effect['amount2']) + " Range"
 		"rangeup_per_boost_in_play":
 			if 'all_boosts' in effect and effect['all_boosts']:
-				effect_str += "+" + str(effect['amount']) + "-" + str(effect['amount2']) + " Range per EVERY boost in play."
+				effect_str = "+" + str(effect['amount']) + "-" + str(effect['amount2']) + " Range per EVERY boost in play"
 			else:
-				effect_str += "+" + str(effect['amount']) + "-" + str(effect['amount2']) + " Range per boost in play."
+				effect_str = "+" + str(effect['amount']) + "-" + str(effect['amount2']) + " Range per boost in play"
 		"rangeup_per_sealed_normal":
-			effect_str += "+" + str(effect['amount']) + "-" + str(effect['amount2']) + " Range per sealed normal."
+			effect_str = "+" + str(effect['amount']) + "-" + str(effect['amount2']) + " Range per sealed normal"
 		"repeat_effect_optionally":
-			effect_str += get_effect_text(effect['linked_effect'], false, false, false)
+			effect_str = get_effect_text(effect['linked_effect'], false, false, false)
 			var repeats = str(effect['amount'])
 			if repeats != '0':
 				if repeats == "every_two_sealed_normals":
 					repeats = "once for every 2 sealed normals"
 				else:
 					repeats += " time(s)"
-				effect_str += "; you may repeat this %s." % repeats
+				effect_str += "; you may repeat this %s" % repeats
 		"retreat":
-			effect_str += "Retreat "
+			effect_str = "Retreat "
 			if str(effect['amount']) == "strike_x":
 				effect_str += "X"
 			else:
 				effect_str += str(effect['amount'])
 		"return_attack_to_hand":
-			effect_str += "Return the attack to your hand"
+			effect_str = "return the attack to your hand"
 		"return_attack_to_top_of_deck":
-			effect_str += "Return the attack to the top of your deck"
+			effect_str = "return the attack to the top of your deck"
 		"return_this_attack_to_hand_after_attack":
 			if 'card_name' in effect:
-				effect_str += "Return %s to hand" % effect['card_name']
+				effect_str = "return %s to hand" % effect['card_name']
 			else:
-				effect_str += "Return this to hand"
+				effect_str = "return this to hand"
 		"return_this_boost_to_hand_strike_effect":
 			if 'card_name' in effect:
-				effect_str += "Return %s to hand" % effect['card_name']
+				effect_str = "return %s to hand" % effect['card_name']
 			else:
-				effect_str += "Return this to hand"
+				effect_str = "return this to hand"
 		"return_this_to_hand_immediate_boost":
 			if 'card_name' in effect:
-				effect_str += "Return %s to hand" % effect['card_name']
+				effect_str = "return %s to hand" % effect['card_name']
 			else:
-				effect_str += "Return this to hand"
+				effect_str = "return this to hand"
 		"return_all_cards_gauge_to_hand":
-			effect_str += "Return all cards in gauge to hand."
+			effect_str = "return all cards in gauge to hand"
 		"reveal_copy_for_advantage":
-			effect_str += "Reveal a copy of this attack to Gain Advantage"
+			effect_str = "reveal a copy of this attack to gain Advantage"
 		"reveal_hand":
 			if 'opponent' in effect and effect['opponent']:
-				effect_str += "Reveal opponent hand"
+				effect_str = "reveal opponent hand"
 			else:
-				effect_str += "Reveal your hand"
+				effect_str = "reveal your hand"
 		"reveal_hand_and_topdeck":
 			if 'opponent' in effect and effect['opponent']:
-				effect_str += "Reveal opponent hand and top card of deck"
+				effect_str = "reveal opponent hand and top card of deck"
 			else:
-				effect_str += "Reveal your hand and top card of deck"
+				effect_str = "reveal your hand and top card of deck"
 		"reveal_strike":
-			effect_str += "Initiate face-up"
+			effect_str = "initiate face-up"
 		"save_power":
-			effect_str += "Your printed power becomes its Power"
+			effect_str = "your printed power becomes its power"
 		"use_saved_power_as_printed_power":
-			effect_str += "Your printed power is the revealed card's power"
+			effect_str = "your printed power is the revealed card's power"
 		"set_strike_x":
-			effect_str += "Set X to "
+			effect_str = "set X to "
 			match effect['source']:
 				'random_gauge_power':
 					effect_str += "power of random gauge card"
@@ -696,17 +696,17 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 				_:
 					effect_str += "(UNKNOWN)"
 		"seal_attack_on_cleanup":
-			effect_str += "Seal your attack on cleanup"
+			effect_str = "seal your attack on cleanup"
 		"seal_this":
 			if card_name_source:
-				effect_str += "Seal %s" % card_name_source
+				effect_str = "seal %s" % card_name_source
 			else:
-				effect_str += "Seal this"
+				effect_str = "seal this"
 		"seal_topdeck":
 			if 'card_name' in effect:
-				effect_str += "Seal %s from the top of your deck" % effect['card_name']
+				effect_str = "seal %s from the top of your deck" % effect['card_name']
 			else:
-				effect_str += "Seal the top card of your deck"
+				effect_str = "seal the top card of your deck"
 		"self_discard_choose":
 			var destination = effect['destination'] if 'destination' in effect else "discard"
 			var limitation = ""
@@ -716,88 +716,88 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 			var optional = 'optional' in effect and effect['optional']
 			var optional_text = ""
 			if optional:
-				optional_text = "You may: "
+				optional_text = "you may: "
 			if 'discard_effect' in effect:
 				bonus= "\nfor: " + get_effect_text(effect['discard_effect'], false, false, false)
 			if destination == "sealed":
-				effect_str += optional_text + "Seal " + str(effect['amount']) + limitation + " card(s)" + bonus
+				effect_str = optional_text + "seal " + str(effect['amount']) + limitation + " card(s)" + bonus
 			elif destination == "reveal":
-				effect_str += optional_text + "Reveal " + str(effect['amount']) + limitation + " card(s)" + bonus
+				effect_str = optional_text + "reveal " + str(effect['amount']) + limitation + " card(s)" + bonus
 			elif destination == "opponent_overdrive":
-				effect_str += optional_text + "Add " + str(effect['amount']) + limitation + " card(s) from hand to your opponent's overdrive" + bonus
+				effect_str = optional_text + "add " + str(effect['amount']) + limitation + " card(s) from hand to your opponent's overdrive" + bonus
 			else:
-				effect_str += optional_text + "Discard " + str(effect['amount']) + limitation + " card(s)" + bonus
+				effect_str = optional_text + "discard " + str(effect['amount']) + limitation + " card(s)" + bonus
 		"set_used_character_bonus":
-			effect_str += ": " + get_effect_text(effect['linked_effect'], false, false, false)
+			effect_str = ": " + get_effect_text(effect['linked_effect'], false, false, false)
 		"shuffle_hand_to_deck":
-			effect_str += "Shuffle hand into deck"
+			effect_str = "shuffle hand into deck"
 		"shuffle_sealed_to_deck":
-			effect_str += "Shuffle sealed cards into deck"
+			effect_str = "shuffle sealed cards into deck"
 		"sidestep_dialogue":
-			effect_str += "Named card will not hit this strike"
+			effect_str = "named card will not hit this strike"
 		"speedup":
 			if effect['amount'] > 0:
-				effect_str += "+"
+				effect_str = "+"
 			#else: str() converts it to - already.
 				#effect_str += "-"
 			effect_str += str(effect['amount']) + " Speed"
 		"speedup_per_boost_in_play":
 			if 'all_boosts' in effect and effect['all_boosts']:
-				effect_str += "+" + str(effect['amount']) + " Speed per EVERY boost in play."
+				effect_str = "+" + str(effect['amount']) + " Speed per EVERY boost in play"
 			else:
-				effect_str += "+" + str(effect['amount']) + " Speed per boost in play."
+				effect_str = "+" + str(effect['amount']) + " Speed per boost in play"
 		"spend_life":
-			effect_str += "Spend " + str(effect['amount']) + " life"
+			effect_str = "spend " + str(effect['amount']) + " life"
 		"strike":
-			effect_str += "Strike"
+			effect_str = "strike"
 		"strike_wild":
-			effect_str += "Wild swing"
+			effect_str = "Wild swing"
 			if 'card_name' in effect:
 				effect_str += " (%s on top of deck)" % effect['card_name']
 		"strike_faceup":
-			effect_str += "Strike face-up"
+			effect_str = "strike face-up"
 		"strike_opponent_sets_first":
-			effect_str += "Strike (opponent sets first)"
+			effect_str = "strike (opponent sets first)"
 		"strike_random_from_gauge":
-			effect_str += "Strike with random card from gauge (opponent sets first)"
+			effect_str = "strike with random card from gauge (opponent sets first)"
 		"strike_response_reading":
 			if 'ex_card_id' in effect:
-				effect_str += "EX Strike"
+				effect_str = "EX Strike"
 			else:
-				effect_str += "Strike"
+				effect_str = "strike"
 		"stun_immunity":
-			effect_str += "Stun Immunity"
+			effect_str = "Stun Immunity"
 		"sustain_this":
 			if card_name_source:
-				effect_str += "Sustain %s" % card_name_source
+				effect_str = "sustain %s" % card_name_source
 			else:
-				effect_str += "Sustain this"
+				effect_str = "sustain this"
 		"swap_buddy":
-			effect_str += effect['description']
+			effect_str = effect['description']
 		"swap_deck_and_sealed":
-			effect_str += "Swap all sealed cards with deck"
+			effect_str = "swap all sealed cards with deck"
 		"take_bonus_actions":
 			if 'use_simple_description' in effect and effect['use_simple_description']:
-				effect_str += "Take another action."
+				effect_str = "take another action"
 			else:
 				var amount = effect['amount']
-				effect_str += "Take %s actions. Cannot cancel and striking ends turn." % str(amount)
+				effect_str = "take %s actions. Cannot cancel and striking ends turn" % str(amount)
 		"take_damage":
-			var who_str = "Take"
+			var who_str = "take"
 			if 'opponent' in effect and effect['opponent']:
-				who_str = "Deal"
+				who_str = "deal"
 			var nonlethal_str = ""
 			if 'nonlethal' in effect and effect['nonlethal']:
 				nonlethal_str = " nonlethal"
-			effect_str += "%s %s%s damage" % [who_str, str(effect['amount']), nonlethal_str]
+			effect_str = "%s %s%s damage" % [who_str, str(effect['amount']), nonlethal_str]
 		"topdeck_from_hand":
-			effect_str += "Put a card from your hand on top of your deck"
+			effect_str = "put a card from your hand on top of your deck"
 		"when_hit_force_for_armor":
-			effect_str += "When hit, generate force for " + str(effect['amount']) + " armor each."
+			effect_str = "when hit, generate force for " + str(effect['amount']) + " Armor each"
 		"zero_vector_dialogue":
-			effect_str += "Named card is invalid for both players."
+			effect_str = "named card is invalid for both players"
 		_:
-			effect_str += "MISSING EFFECT"
+			effect_str = "MISSING EFFECT"
 	return effect_str
 
 func get_effect_text(effect, short = false, skip_timing = false, skip_condition = false, card_name_source : String = ""):
@@ -852,6 +852,26 @@ func get_effects_text(effects):
 		var effect_text = get_effect_text(effect)
 		if effect_text:
 			effects_str += effect_text + "\n"
+	return format_effects_text_output(effects_str)
+
+func format_effects_text_output(effects_str : String) -> String:
+	if effects_str and effects_str != "":
+		effects_str = effects_str.replace("\n", ".\n")
+		effects_str = effects_str.substr(0, 1).capitalize() + effects_str.substr(1)
+		var index = 0
+		index = effects_str.find("\n", 0)
+		while index != -1:
+			effects_str = effects_str.substr(0, index + 1) + effects_str.substr(index + 1, 1).capitalize() + effects_str.substr(index + 2)
+			index = effects_str.find("\n", index + 1)
+		index = effects_str.find(": ", 0)
+		while index != -1:
+			effects_str = effects_str.substr(0, index + 2) + effects_str.substr(index + 2, 1).capitalize() + effects_str.substr(index + 3)
+			index = effects_str.find(": ", index + 1)
+		index = effects_str.find(":[/b] ", 0)
+		while index != -1:
+			effects_str = effects_str.substr(0, index + 6) + effects_str.substr(index + 6, 1).capitalize() + effects_str.substr(index + 7)
+			index = effects_str.find(":[/b] ", index + 1)
+		effects_str = effects_str.trim_suffix('\n')
 	return effects_str
 
 func get_on_exceed_text(on_exceed_ability):
