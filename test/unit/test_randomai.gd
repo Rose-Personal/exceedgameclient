@@ -221,7 +221,7 @@ func handle_decisions(game: LocalGame):
 				var decision_action = decision_ai.pick_discard_opponent_gauge(game, decision_player.my_id)
 				assert_true(game.do_boost_name_card_choice_effect(decision_player, decision_action.card_id), "do discard opponent gauge failed")
 			Enums.DecisionType.DecisionType_BoostNow:
-				var boostnow_action = decision_ai.take_boost(game, decision_player.my_id, game.decision_info.allow_gauge, game.decision_info.only_gauge, game.decision_info.limitation)
+				var boostnow_action = decision_ai.take_boost(game, decision_player.my_id, game.decision_info.legal_boost_zones, game.decision_info.limitation)
 				assert_true(game.do_boost(decision_player, boostnow_action.card_id, boostnow_action.payment_card_ids), "do boost now failed")
 			Enums.DecisionType.DecisionType_ChooseFromTopDeck:
 				var decision_info = game.decision_info
@@ -772,6 +772,16 @@ func test_mika_100():
 
 func test_chaos_100():
 	default_deck = CardDefinitions.get_deck_from_str_id("chaos")
+	for i in range(RandomIterations):
+		print("==== RUNNING TEST %d ====" % i)
+		run_ai_game()
+		game_teardown()
+		game_setup()
+	pass_test("Finished match")
+
+
+func test_propeller_100():
+	default_deck = CardDefinitions.get_deck_from_str_id("propeller")
 	for i in range(RandomIterations):
 		print("==== RUNNING TEST %d ====" % i)
 		run_ai_game()

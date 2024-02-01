@@ -611,6 +611,9 @@ class Player:
 	func random_shuffle_deck():
 		parent.shuffle_array(deck)
 
+	func random_shuffle_discard_in_place():
+		parent.shuffle_array(discards)
+
 	func owns_card(card_id: int):
 		for card in deck_list:
 			if card.id == card_id:
@@ -1084,9 +1087,9 @@ class Player:
 			return false
 		return true
 
-	func can_boost_something(allow_gauge : bool, only_gauge : bool, limitation : String) -> bool:
+	func can_boost_something(legal_boost_zones : Array, limitation : String) -> bool:
 		var force_available = get_available_force()
-		if not only_gauge:
+		if "hand" in legal_boost_zones:
 			for card in hand:
 				var meets_limitation = true
 				if limitation:
@@ -1097,7 +1100,7 @@ class Player:
 				var cost = parent.card_db.get_card_boost_force_cost(card.id)
 				if force_available_when_boosting_this >= cost:
 					return true
-		if allow_gauge:
+		if "gauge" in legal_boost_zones:
 			for card in gauge:
 				var meets_limitation = true
 				if limitation:
@@ -1105,6 +1108,17 @@ class Player:
 				if not meets_limitation:
 					continue
 				var force_available_when_boosting_this = force_available - parent.card_db.get_card_force_value(card.id)
+				var cost = parent.card_db.get_card_boost_force_cost(card.id)
+				if force_available_when_boosting_this >= cost:
+					return true
+		if "discard" in legal_boost_zones:
+			for card in discards:
+				var meets_limitation = true
+				if limitation:
+					meets_limitation = card.definition['boost']['boost_type'] == limitation
+				if not meets_limitation:
+					continue
+				var force_available_when_boosting_this = force_available
 				var cost = parent.card_db.get_card_boost_force_cost(card.id)
 				if force_available_when_boosting_this >= cost:
 					return true
@@ -1167,7 +1181,7 @@ class Player:
 		if get_available_force() < force_cost: return false
 
 		if 'can_boost_continuous_boost_from_gauge' in action and action['can_boost_continuous_boost_from_gauge']:
-			if not can_boost_something(true, true, 'continuous'): return false
+			if not can_boost_something(['gauge'], 'continuous'): return false
 
 		if 'min_hand_size' in action:
 			if len(hand) < action['min_hand_size']: return false
@@ -2552,6 +2566,8 @@ func is_effect_condition_met(performing_player : Player, effect, local_condition
 			return not initiated_strike
 		elif condition == "not_moved_self_this_strike":
 			return not performing_player.moved_self_this_strike
+		elif condition == "opponent_not_moved_this_strike":
+			return not other_player.moved_self_this_strike
 		elif condition == "initiated_at_range":
 			var range_min = effect['range_min']
 			var range_max = effect['range_max']
@@ -2774,6 +2790,8 @@ func is_effect_condition_met(performing_player : Player, effect, local_condition
 			return true
 		elif condition == "opponent_at_edge_of_arena":
 			return other_player.arena_location == MinArenaLocation or other_player.arena_location == MaxArenaLocation
+		elif condition == "opponent_at_max_range":
+			return is_location_at_max_range(performing_player, active_strike.get_player_card(performing_player), other_player.arena_location)
 		elif condition == "opponent_stunned":
 			return active_strike.is_player_stunned(other_player)
 		elif condition == "overdrive_empty":
@@ -3001,15 +3019,24 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 				assert(false)
 				printlog("ERROR: Unimplemented path to boost_applies_if_on_buddy")
 			performing_player.set_boost_applies_if_on_buddy(card_id)
-		"boost_from_gauge":
-			if performing_player.can_boost_something(true, true, effect['limitation']):
-				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", true, true, effect['limitation'])]
+		"boost_from_discard":
+			if performing_player.can_boost_something(["discard"], effect.get('limitation')):
+				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", ["discard"], effect['limitation'])]
 				change_game_state(Enums.GameState.GameState_PlayerDecision)
 				decision_info.clear()
 				decision_info.type = Enums.DecisionType.DecisionType_BoostNow
 				decision_info.player = performing_player.my_id
-				decision_info.allow_gauge = true
-				decision_info.only_gauge = true
+				decision_info.legal_boost_zones = ["discard"]
+				decision_info.limitation = effect['limitation']
+			else:
+				_append_log_full(Enums.LogType.LogType_Effect, performing_player, "has no valid cards in discard to boost with.")
+		"boost_from_gauge":
+			if performing_player.can_boost_something(["gauge"], effect.get('limitation')):
+				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", ["gauge"], effect['limitation'])]
+				change_game_state(Enums.GameState.GameState_PlayerDecision)
+				decision_info.type = Enums.DecisionType.DecisionType_BoostNow
+				decision_info.player = performing_player.my_id
+				decision_info.legal_boost_zones = ["gauge"]
 				decision_info.limitation = effect['limitation']
 			else:
 				_append_log_full(Enums.LogType.LogType_Effect, performing_player, "has no valid cards in gauge to boost with.")
@@ -3021,21 +3048,18 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 				var boost_effect = effect['boost_effect']
 				events += handle_strike_effect(card_id, boost_effect, performing_player)
 		"boost_then_sustain":
-			var allow_gauge = 'allow_gauge' in effect and effect['allow_gauge']
-			var only_gauge = 'only_gauge' in effect and effect['only_gauge']
-			if performing_player.can_boost_something(allow_gauge, only_gauge, effect['limitation']):
-				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", allow_gauge, only_gauge, effect['limitation'])]
+			if performing_player.can_boost_something(effect['legal_boost_zones'], effect.get('limitation')):
+				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", effect['legal_boost_zones'], effect['limitation'])]
 				change_game_state(Enums.GameState.GameState_PlayerDecision)
 				decision_info.clear()
 				decision_info.type = Enums.DecisionType.DecisionType_BoostNow
 				decision_info.player = performing_player.my_id
-				decision_info.allow_gauge = allow_gauge
-				decision_info.only_gauge = only_gauge
+				decision_info.legal_boost_zones = effect['legal_boost_zones']
 				decision_info.limitation = effect['limitation']
 				performing_player.sustain_next_boost = true
 				performing_player.cancel_blocked_this_turn = true
 			else:
-				if len(performing_player.hand) == 0 or only_gauge: # Avoid leaking information
+				if len(performing_player.hand) == 0 or not "hand" in effect['legal_boost_zones']: # Avoid leaking information
 					_append_log_full(Enums.LogType.LogType_Effect, performing_player, "has no cards available to boost.")
 		"boost_then_sustain_topdeck":
 			if performing_player.deck.size() > 0:
@@ -3063,22 +3087,19 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 			else:
 				_append_log_full(Enums.LogType.LogType_Effect, performing_player, "has no cards in discards to boost with.")
 		"boost_then_strike":
-			var allow_gauge = 'allow_gauge' in effect and effect['allow_gauge']
-			var only_gauge = 'only_gauge' in effect and effect['only_gauge']
-			if performing_player.can_boost_something(allow_gauge, only_gauge, effect['limitation']):
-				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", allow_gauge, only_gauge, effect['limitation'])]
+			if performing_player.can_boost_something(effect['legal_boost_zones'], effect.get('limitation')):
+				events += [create_event(Enums.EventType.EventType_ForceStartBoost, performing_player.my_id, 0, "", effect['legal_boost_zones'], effect['limitation'])]
 				change_game_state(Enums.GameState.GameState_PlayerDecision)
 				decision_info.clear()
 				decision_info.type = Enums.DecisionType.DecisionType_BoostNow
 				decision_info.player = performing_player.my_id
-				decision_info.allow_gauge = allow_gauge
-				decision_info.only_gauge = only_gauge
+				decision_info.legal_boost_zones = effect['legal_boost_zones']
 				decision_info.limitation = effect['limitation']
 				performing_player.strike_on_boost_cleanup = true
 				if 'wild_strike' in effect and effect['wild_strike']:
 					performing_player.wild_strike_on_boost_cleanup = true
 			else:
-				if len(performing_player.hand) == 0 or only_gauge: # Avoid leaking information
+				if len(performing_player.hand) == 0 or not "hand" in effect['legal_boost_zones']: # Avoid leaking information
 					_append_log_full(Enums.LogType.LogType_Effect, performing_player, "has no cards available to boost.")
 				events += [create_event(Enums.EventType.EventType_ForceStartStrike, performing_player.my_id, 0)]
 				change_game_state(Enums.GameState.GameState_WaitForStrike)
@@ -4296,6 +4317,8 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 			else:
 				# Nothing else implemented.
 				assert(false)
+		"shuffle_discard_in_place":
+				events += performing_player.random_shuffle_discard_in_place()
 		"shuffle_into_deck_from_hand":
 			if len(performing_player.hand) > 0:
 				change_game_state(Enums.GameState.GameState_PlayerDecision)
@@ -5012,6 +5035,18 @@ func is_location_in_range(attacking_player, card, test_location : int):
 	if min_range <= distance and distance <= max_range:
 		return true
 	return false
+
+func is_location_at_max_range(attacking_player, card, test_location : int):
+	if get_card_stat(attacking_player, card, 'range_min') == -1:
+		return false
+	var max_range = get_card_stat(attacking_player, card, 'range_max') + attacking_player.strike_stat_boosts.max_range
+	var attack_source_location = attacking_player.arena_location
+	if attacking_player.strike_stat_boosts.calculate_range_from_buddy:
+		attack_source_location = attacking_player.get_buddy_location(attacking_player.strike_stat_boosts.calculate_range_from_buddy_id)
+		if attack_source_location == -1:
+			return false
+	var distance = abs(attack_source_location - test_location)
+	return distance == max_range
 
 func in_range(attacking_player, defending_player, card, combat_logging=false):
 	if attacking_player.strike_stat_boosts.attack_does_not_hit:

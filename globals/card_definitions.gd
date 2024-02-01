@@ -237,6 +237,8 @@ func get_condition_text(effect, amount, amount2, detail):
 			text += "If stunned, "
 		"not_stunned":
 			text += "If not stunned, "
+		"opponent_not_moved_this_strike":
+			text += "If the opponent did not move themself this strike, "
 		"opponent_stunned":
 			text += "If opponent stunned, "
 		"pulled_past":
@@ -277,6 +279,8 @@ func get_condition_text(effect, amount, amount2, detail):
 			text += "If you have more cards in hand than opponent, "
 		"opponent_at_edge_of_arena":
 			text += "If opponent at arena edge, "
+		"opponent_at_max_range":
+			text += "If the opponent is at max range, "
 		"opponent_between_buddy":
 			if 'include_buddy_space' in effect and effect['include_buddy_space']:
 				text += "If opponent is on %s or between you, " % detail
@@ -399,10 +403,11 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 			var limitation_str = "boost"
 			if effect['limitation']:
 				limitation_str = effect['limitation'] + " boost"
-			if effect['allow_gauge']:
-				effect_str += "Play and sustain a %s from hand or gauge." % limitation_str
+			if "hand" in effect['legal_boost_zones'] and effect['legal_boost_zones'].size() == 1:
+				effect_str += "Play and sustain a %s." % limitation_str
 			else:
-				effect_str += "Play and sustain a %s from hand." % limitation_str
+				var zone_str = " or ".join(effect['legal_boost_zones'])
+				effect_str += "Play and sustain a %s from %s." % [limitation_str, zone_str]
 		"boost_then_sustain_topdeck":
 			effect_str += "Play and sustain %s card(s) from the top of your deck." % effect['amount']
 		"boost_then_sustain_topdiscard":

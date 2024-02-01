@@ -70,9 +70,6 @@ var select_card_must_be_max_or_min = false
 var select_card_require_force = 0
 var select_card_up_to_force = 0
 var select_card_destination = ""
-var select_boost_from_gauge = false
-var select_boost_only_from_gauge = false
-var select_boost_limitation = ""
 var selected_boost_to_pay_for = -1
 var instructions_ok_allowed = false
 var instructions_cancel_allowed = false
@@ -748,7 +745,7 @@ func can_select_card(card):
 		UISubState.UISubState_SelectCards_StrikeCard_FromSealed:
 			return in_sealed
 		UISubState.UISubState_SelectCards_PlayBoost:
-			var valid_card = game_wrapper.can_player_boost(Enums.PlayerId.PlayerId_Player, card.card_id, select_boost_from_gauge, select_boost_only_from_gauge, select_boost_limitation)
+			var valid_card = game_wrapper.can_player_boost(Enums.PlayerId.PlayerId_Player, card.card_id, boost_selection_options)
 			return len(selected_cards) == 0 and valid_card
 		UISubState.UISubState_SelectCards_ForceForBoost:
 			return (in_gauge or in_hand) and selected_boost_to_pay_for != card.card_id
@@ -1494,14 +1491,13 @@ func _on_exceed_revert_event(event):
 
 func _on_force_start_boost(event):
 	var player = event['event_player']
-	var allow_gauge = event['extra_info']
-	var only_gauge = event['extra_info2']
-	var limitation = event['extra_info3']
+	var legal_boost_zones = event['extra_info']
+	var limitation = event['extra_info2']
 	spawn_damage_popup("Boost!", player)
 	if player == Enums.PlayerId.PlayerId_Player:
-		begin_boost_choosing(false, allow_gauge, only_gauge, limitation)
+		begin_boost_choosing(false, legal_boost_zones, limitation)
 	else:
-		ai_do_boost(allow_gauge, only_gauge, limitation)
+		ai_do_boost(legal_boost_zones, limitation)
 	return SmallNoticeDelay
 
 func _on_force_start_strike(event):
@@ -1872,29 +1868,30 @@ func begin_gauge_strike_choosing(strike_response : bool, cancel_allowed : bool, 
 			new_sub_state = UISubState.UISubState_SelectCards_StrikeCard_FromSealed
 	change_ui_state(UIState.UIState_SelectCards, new_sub_state)
 
-func begin_boost_choosing(can_cancel : bool, allow_gauge : bool, only_gauge : bool, limitation : String):
+func begin_boost_choosing(can_cancel : bool, legal_boost_zones : Array, limitation : String):
 	selected_cards = []
 	select_card_require_min = 1
 	select_card_require_max = 1
-	select_boost_from_gauge = allow_gauge
-	select_boost_only_from_gauge = only_gauge
-	select_boost_limitation = limitation
 	var limitation_str = "card"
+	var instructions = ""
 	if limitation:
 		limitation_str = limitation + " boost"
-	var instructions = "Select a %s to boost." % limitation_str
-	if allow_gauge:
+	if "hand" in legal_boost_zones and legal_boost_zones.size() == 1:
+		instructions = "Select a %s to boost." % limitation_str
+	else:
+		var zones_str = " or ".join(legal_boost_zones)
+		instructions = "Select a %s to boost from %s." % [limitation_str, zones_str]
+	if "gauge" in legal_boost_zones:
 		_on_player_gauge_gauge_clicked()
-		instructions = "Select a %s to boost from hand or gauge." % limitation_str
-	if only_gauge:
-		instructions = "Select a %s to boost from gauge." % limitation_str
+	elif "discard" in legal_boost_zones:
+		_on_player_discard_button_pressed()
 
 	boost_selection_options = {
 		"can_cancel": can_cancel,
-		"allow_gauge": allow_gauge,
-		"only_gauge": only_gauge,
+		"legal_boost_zones": legal_boost_zones,
 		"limitation": limitation
 	}
+
 	enable_instructions_ui(instructions, true, can_cancel)
 	change_ui_state(UIState.UIState_SelectCards, UISubState.UISubState_SelectCards_PlayBoost)
 
@@ -2857,7 +2854,7 @@ func _on_reshuffle_button_pressed():
 	_update_buttons()
 
 func _on_boost_button_pressed():
-	begin_boost_choosing(true, false, false, "")
+	begin_boost_choosing(true, ["hand"], "")
 
 func _on_strike_button_pressed():
 	begin_strike_choosing(false, true)
@@ -3017,10 +3014,9 @@ func _on_instructions_cancel_button_pressed():
 		UISubState.UISubState_SelectCards_ForceForBoost:
 			deselect_all_cards()
 			var can_cancel = boost_selection_options['can_cancel']
-			var allow_gauge = boost_selection_options['allow_gauge']
-			var only_gauge = boost_selection_options['only_gauge']
+			var legal_boost_zones = boost_selection_options['legal_boost_zones']
 			var limitation = boost_selection_options['limitation']
-			begin_boost_choosing(can_cancel, allow_gauge, only_gauge, limitation)
+			begin_boost_choosing(can_cancel, legal_boost_zones, limitation)
 		_:
 			match ui_state:
 				UIState.UIState_SelectArenaLocation:
@@ -3211,10 +3207,10 @@ func ai_take_turn():
 	else:
 		print("FAILED AI TURN")
 
-func ai_do_boost(allow_gauge : bool, only_gauge : bool, limitation : String):
+func ai_do_boost(legal_boost_zones : Array, limitation : String):
 	change_ui_state(UIState.UIState_WaitForGameServer)
 	if not game_wrapper.is_ai_game(): return
-	var boost_action = ai_player.take_boost(game_wrapper.current_game, Enums.PlayerId.PlayerId_Opponent, allow_gauge, only_gauge, limitation)
+	var boost_action = ai_player.take_boost(game_wrapper.current_game, Enums.PlayerId.PlayerId_Opponent, legal_boost_zones, limitation)
 	var success = ai_handle_boost(boost_action)
 	if success:
 		change_ui_state(UIState.UIState_WaitForGameServer)

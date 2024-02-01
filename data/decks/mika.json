@@ -15,7 +15,12 @@
 				"effect_type": "choice",
 				"add_topdeck_card_name_to_choices": [1],
 				"choice": [
-					{ "effect_type": "boost_then_strike", "limitation": "", "wild_strike": true },
+					{
+						"effect_type": "boost_then_strike", 
+						"legal_boost_zones": ["hand"],
+						"limitation": "", 
+						"wild_strike": true
+					},
 					{ "effect_type": "strike_wild" }
 				]
 			}
@@ -29,7 +34,12 @@
 				"effect_type": "choice",
 				"add_topdeck_card_name_to_choices": [1],
 				"choice": [
-					{ "effect_type": "boost_then_strike", "limitation": "", "wild_strike": true },
+					{
+						"effect_type": "boost_then_strike", 
+						"legal_boost_zones": ["hand"],
+						"limitation": "", 
+						"wild_strike": true
+					},
 					{ "effect_type": "strike_wild" }
 				]
 			}

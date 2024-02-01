@@ -251,8 +251,12 @@ func other_player(id : Enums.PlayerId) -> Enums.PlayerId:
 func get_card_database() -> CardDatabase:
 	return current_game.get_card_database()
 
-func can_player_boost(player_id : Enums.PlayerId, card_id : int, allow_gauge : bool, only_gauge : bool, limitation : String) -> bool:
-	if (not only_gauge and is_card_in_hand(player_id, card_id)) or (allow_gauge and is_card_in_gauge(player_id, card_id)):
+func can_player_boost(player_id : Enums.PlayerId, card_id : int, boost_selection_options) -> bool:
+	var legal_boost_zones = boost_selection_options["legal_boost_zones"]
+	var limitation = boost_selection_options["limitation"]
+	if (is_card_in_hand(player_id, card_id) and "hand" in legal_boost_zones) \
+	or (is_card_in_gauge(player_id, card_id) and "gauge" in legal_boost_zones) \
+	or (is_card_in_discards(player_id, card_id) and "discard" in legal_boost_zones):
 		var card_db = current_game.get_card_database()
 		var card = card_db.get_card(card_id)
 		if limitation and card.definition['boost']['boost_type'] != limitation:
