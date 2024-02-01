@@ -4322,7 +4322,7 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 				# Nothing else implemented.
 				assert(false)
 		"shuffle_discard_in_place":
-				events += performing_player.random_shuffle_discard_in_place()
+				performing_player.random_shuffle_discard_in_place()
 		"shuffle_into_deck_from_hand":
 			if len(performing_player.hand) > 0:
 				change_game_state(Enums.GameState.GameState_PlayerDecision)
