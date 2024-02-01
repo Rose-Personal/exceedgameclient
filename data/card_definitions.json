@@ -2544,7 +2544,7 @@
 				"effect_type": "choice",
 				"choice": [
 					{ "effect_type": "gain_advantage" },
-					{ "effect_type": "return_this_attack_to_hand_after_attack", "card_name": "Resshou" }
+					{ "effect_type": "return_attack_to_hand", "card_name": "Resshou" }
 				]
 			}
 		],
@@ -12323,7 +12323,7 @@
 				"timing": "after",
 				"effect_type": "choice",
 				"choice": [
-					{ "effect_type": "return_this_attack_to_hand_after_attack", "card_name": "Binding Beatitude" },
+					{ "effect_type": "return_attack_to_hand", "card_name": "Binding Beatitude" },
 					{ "effect_type": "pass" }
 				]
 			}
@@ -13042,8 +13042,9 @@
 							{ "effect_type": "draw", "amount": 1}
 					},
 					{
-						"effect_type": "draw",
-						"amount": 1
+						"effect_type": "pass",
+						"and":
+							{ "effect_type": "draw", "amount": 1}
 					}
 				]
 			},
@@ -13198,9 +13199,14 @@
 					"effect_type": "choice",
 					"choice": [
 						{ "effect_type": "gain_advantage" },
-						{ "effect_type": "return_this_attack_to_hand_after_attack", "card_name": "Saber Lunge" }
+						{ "effect_type": "return_attack_to_hand_after_attack", "card_name": "Saber Lunge" }
 					]
 				}
+			},
+			{
+				"timing": "after",
+				"condition": "chose_return_attack_to_hand_after_attack",
+				"effect_type": "return_attack_to_hand"
 			}
 		],
 		"boost": {

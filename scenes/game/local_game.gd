@@ -491,6 +491,7 @@ class Player:
 	var cards_that_will_not_hit : Array[String]
 	var cards_invalid_during_strike : Array[String]
 	var plague_knight_discard_names : Array[String]
+	var chose_return_attack_to_hand_after_attack : bool
 
 	func _init(id, player_name, parent_ref, card_db_ref, chosen_deck, card_start_id):
 		my_id = id
@@ -573,6 +574,7 @@ class Player:
 		cards_that_will_not_hit = []
 		cards_invalid_during_strike = []
 		plague_knight_discard_names = []
+		chose_return_attack_to_hand_after_attack = false
 
 		if "buddy_cards" in deck_def:
 			var buddy_index = 0
@@ -2660,6 +2662,8 @@ func is_effect_condition_met(performing_player : Player, effect, local_condition
 			return not local_conditions.advanced_through_buddy
 		elif condition == "not_full_push":
 			return not local_conditions.fully_pushed
+		elif condition == "chose_return_attack_to_hand_after_attack":
+			return performing_player.chose_return_attack_to_hand_after_attack
 		elif condition == "pushed_min_spaces":
 			return local_conditions.push_amount >= effect['condition_amount']
 		elif condition == "pulled_past":
@@ -4172,6 +4176,7 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 			events += performing_player.return_all_cards_gauge_to_hand()
 		"return_attack_to_hand":
 			performing_player.strike_stat_boosts.return_attack_to_hand = true
+			change_stats_when_attack_leaves_play(performing_player)
 		"return_sealed_with_same_speed":
 			var sealed_card_id = decision_info.amount
 			var sealed_card = card_db.get_card(sealed_card_id)
@@ -4184,9 +4189,8 @@ func handle_strike_effect(card_id :int, effect, performing_player : Player):
 				var card_name = target_card.definition["display_name"]
 				_append_log_full(Enums.LogType.LogType_CardInfo, performing_player, "adds the sealed card with speed %s to their hand: %s." % [sealed_card.definition['speed'], card_name])
 				events += performing_player.move_card_from_sealed_to_hand(target_card.id)
-		"return_this_attack_to_hand_after_attack":
-			performing_player.strike_stat_boosts.return_attack_to_hand = true
-			change_stats_when_attack_leaves_play(performing_player)
+		"return_attack_to_hand_after_attack":
+			performing_player.chose_return_attack_to_hand_after_attack = true
 		"return_this_boost_to_hand_strike_effect":
 			var card_name = card_db.get_card_name(card_id)
 			_append_log_full(Enums.LogType.LogType_CardInfo, performing_player, "returns boosted card %s to their hand." % card_name)

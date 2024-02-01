@@ -253,6 +253,8 @@ func get_condition_text(effect, amount, amount2, detail):
 			text += "If the opponent is at range %s+, " % amount
 		"range_multiple":
 			text += "If the opponent is at range %s-%s, " % [amount, amount2]
+		"chose_return_attack_to_hand_after_attack":
+			text += "If chosen, "
 		"is_special_attack":
 			text += ""
 		"is_special_or_ultra_attack":
@@ -656,9 +658,9 @@ func get_effect_type_text(effect, card_name_source : String = ""):
 			effect_str += "Return the attack to your hand"
 		"return_attack_to_top_of_deck":
 			effect_str += "Return the attack to the top of your deck"
-		"return_this_attack_to_hand_after_attack":
+		"return_attack_to_hand_after_attack":
 			if 'card_name' in effect:
-				effect_str += "Return %s to hand" % effect['card_name']
+				effect_str += "Return %s to hand at After" % effect['card_name']
 			else:
 				effect_str += "Return this to hand"
 		"return_this_boost_to_hand_strike_effect":
