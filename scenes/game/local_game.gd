@@ -719,6 +719,12 @@ class Player:
 				hand.remove_at(i)
 				break
 
+	func remove_card_from_discards(id : int):
+		for i in range(len(discards)):
+			if discards[i].id == id:
+				discards.remove_at(i)
+				break
+
 	func remove_card_from_gauge(id : int):
 		for i in range(len(gauge)):
 			if gauge[i].id == id:
@@ -5632,6 +5638,7 @@ func begin_resolve_boost(performing_player : Player, card_id : int):
 	active_boost.card = card_db.get_card(card_id)
 	performing_player.remove_card_from_hand(card_id)
 	performing_player.remove_card_from_gauge(card_id)
+	performing_player.remove_card_from_discards(card_id)
 	events += [create_event(Enums.EventType.EventType_Boost_Played, performing_player.my_id, card_id)]
 
 	# Resolve all immediate/now effects
